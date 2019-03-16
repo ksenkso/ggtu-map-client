@@ -50,12 +50,12 @@
              */
             async locateFirstSearchResult(results) {
                 if (results.length) {
-                    if (results[0].location) {
-                        await this.getScene().setLocation(results[0].location);
+                    const scene = this.getScene();
+                    if (results[0].location && results[0].location.id !== scene.getLocation().id) {
+                        await scene.setLocation(results[0].location);
                     }
                     if (results[0].place) {
-                        // Not implemented in library yet
-
+                        scene.centerOnObject(results[0].place);
                     }
                 }
             }
