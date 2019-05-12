@@ -5,9 +5,11 @@
 </template>
 
 <style lang="sass">
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans')
 html, body
   margin: 0
   padding: 0
+  font-family: 'Fira Sans', sans-serif
 html
   height: 100vh
 body
