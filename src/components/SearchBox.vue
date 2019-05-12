@@ -20,7 +20,7 @@
                 </div>
             </div>
         </form>
-        <Loader :class="showLoader ? 'loader_show' : 'loader_hide'"></Loader>
+        <Loader :show="showLoader"></Loader>
         <div class="search-box__results">
             <transition-group name="results" tag="div">
                 <div class="search-box__result result" v-for="(result, index) in results" :key="index">

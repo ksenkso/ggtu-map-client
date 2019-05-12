@@ -1,10 +1,13 @@
 <template>
-    <div class="loader"></div>
+    <div :class="show ? 'loader loader_show' : 'loader loader_hide'"></div>
 </template>
 
 <script>
     export default {
-        name: "Loader"
+        name: "Loader",
+        props: {
+            show: Boolean,
+        }
     }
 </script>
 
