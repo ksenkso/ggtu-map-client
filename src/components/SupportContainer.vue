@@ -1,10 +1,6 @@
 <template>
     <div class="support">
         <div class="support__main">
-            <transition>
-                <BuildingsList v-if="currentView === 'buildings'" @building-changed="onBuildingChanged"></BuildingsList>
-                <PlacesList :location-id="currentLocation.id" v-if="currentView === 'locations'"></PlacesList>
-            </transition>
             <SearchBox @search-done="locateFirstSearchResult" class="mt-2"></SearchBox>
         </div>
         <FloorsSwitch
@@ -16,13 +12,12 @@
 </template>
 
 <script>
-    import BuildingsList from "@/components/BuildingsList";
     import FloorsSwitch from "@/components/FloorsSwitch";
-    import PlacesList from "@/components/PlacesList";
     import SearchBox from "@/components/SearchBox";
+
     export default {
         name: "SupportContainer",
-        components: {BuildingsList, FloorsSwitch, PlacesList, SearchBox},
+        components: {FloorsSwitch, SearchBox},
         inject: ['getScene'],
         data() {
             return {
