@@ -1,7 +1,9 @@
 <template>
     <div class="support">
-        <div class="support__main">
-            <SearchBox @search-done="locateFirstSearchResult" class="mt-2"></SearchBox>
+        <div class="map__panel">
+            <transition name="component-shift" mode="out-in">
+                <component @toggle="togglePanels" @search-done="locateFirstSearchResult" :is="currentPanel"></component>
+            </transition>
         </div>
         <FloorsSwitch
                 v-if="currentBuilding.id"
@@ -14,10 +16,11 @@
 <script>
     import FloorsSwitch from "@/components/FloorsSwitch";
     import SearchBox from "@/components/SearchBox";
+    import Pathfinder from '@/components/Pathfinder';
 
     export default {
         name: "SupportContainer",
-        components: {FloorsSwitch, SearchBox},
+        components: {FloorsSwitch, SearchBox, Pathfinder},
         inject: ['getScene'],
         data() {
             return {
@@ -27,7 +30,7 @@
                 },
                 currentLocation: {},
                 currentBuilding: {},
-                currentView: 'buildings'
+                currentPanel: 'SearchBox'
 
             }
         },
@@ -37,7 +40,7 @@
             },
             onLocationChanged(location) {
                 this.currentLocation = location;
-                this.currentView = 'locations'
+                this.currentPanel = 'locations'
             },
             /**
              *
@@ -53,24 +56,32 @@
                         scene.centerOnObject(results[0].place);
                     }
                 }
+            },
+            togglePanels() {
+                this.currentPanel = this.currentPanel === 'SearchBox' ? 'Pathfinder' : 'SearchBox';
             }
         }
     }
 </script>
 
 <style scoped lang="sass">
-.support
-    &__main
-        max-width: 600px
-        position: absolute
-        z-index: 1000
-        min-width: 400px
-        top: 40px
-        right: 40px
-.fade-enter-active, .fade-leave-active
-    transition: opacity .5s
+.map__panel
+    position: absolute
+    z-index: 1000
+    top: 20px
+    left: 20px
+    border-radius: 3px
+    overflow: hidden
+    background: #fff
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .13)
+    width: 325px
+    .button
+        cursor: pointer
+.component-shift-enter-active, .component-shift-leave-active
+    transition: opacity .1s ease
 
-.fade-enter, .fade-leave-to
-  opacity: 0
+.component-shift-enter, .component-shift-leave-to
+    opacity: 0
+
 
 </style>
