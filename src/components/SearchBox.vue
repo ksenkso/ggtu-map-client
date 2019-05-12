@@ -20,7 +20,7 @@
                 </div>
             </div>
         </form>
-        <div class="js-loader-target"></div>
+        <Loader :class="showLoader ? 'loader_show' : 'loader_hide'"></Loader>
         <div class="search-box__results">
             <transition-group name="results" tag="div">
                 <div class="search-box__result result" v-for="(result, index) in results" :key="index">
@@ -36,20 +36,31 @@
 <script>
     import api from '../api';
     import {deepestSearchResult} from "@/utils";
+    import Loader from './Loader';
 
     export default {
         name: "SearchBox",
+        components: {Loader},
         data() {
             return {
                 search: '',
                 results: [],
-                showResults: false
+                showResults: false,
+                showLoader: false
             }
         },
         methods: {
             query() {
+                let queryDone = false;
+                setTimeout(() => {
+                    if (!queryDone) {
+                        this.showLoader = true
+                    }
+                }, 50);
                 api.search.query(this.search)
                     .then(results => {
+                        queryDone = true;
+                        this.showLoader = false;
                         this.showResults = true;
                         this.results = results.map((result) => {
                             return {
@@ -110,7 +121,8 @@
         display: flex
         flex-direction: column
         margin: 24px
-
+        .loader
+            margin: 0 auto
         &__header
             display: flex
             align-items: center
