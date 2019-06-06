@@ -7,25 +7,26 @@
                 </button>
                 <h4>Поиск маршрута</h4>
             </div>
-            <form action="#" class="js-pathfinder-form">
+            <form @submit.prevent="findPath" action="#" class="js-pathfinder-form">
                 <div class="pathfinder__inputs">
                     <div class="pathfinder__group">
-                        <input type="text" name="pathfinder-from" id="pathfinder-from" title="Откуда" class="panel__input js-from" autocomplete="off">
+                        <input v-model="from" type="text" name="pathfinder-from" id="pathfinder-from" title="Откуда" class="panel__input js-from" autocomplete="off">
                         <label for="pathfinder-from">Откуда</label>
                     </div>
                     <div class="pathfinder__group">
-                        <input type="text" name="pathfinder-to" id="pathfinder-to" title="Куда" class="panel__input js-to" autocomplete="off">
+                        <input v-model="to" type="text" name="pathfinder-to" id="pathfinder-to" title="Куда" class="panel__input js-to" autocomplete="off">
                         <label for="pathfinder-to">Куда</label>
                     </div>
                 </div>
-                <button class="panel__button panel__button_block">Найти</button>
+                <button class="button button_block">Найти</button>
             </form>
         </div>
         <Loader :show="showLoader"></Loader>
-        <div class="pathfinder__path path">
-            <div class="path__step step">
-                <div class="step__direction">Налево, 40 м</div>
-                <div class="step__destination">Выход из здания</div>
+        <div v-if="showPaths && !path.length" class="pathfinder__no-paths">Маршрут не найден</div>
+        <div v-if="showPaths && path.length" class="pathfinder__path path">
+            <div v-for="(step, index) in path" class="path__step step" :key="index">
+                <div class="step__direction">{{step.direction}}</div>
+                <div v-if="step.destination" class="step__destination">{{step.destination}}</div>
             </div>
         </div>
     </div>
@@ -33,13 +34,50 @@
 
 <script>
     import Loader from './Loader'
+    import api from "../api";
+    import {PathRenderer} from 'ggtu-map';
+    let pathRenderer;
     export default {
         name: "Pathfinder",
         components: {Loader},
+        inject: ['getScene'],
         data() {
             return {
-                showLoader: false
+                showLoader: false,
+                showPaths: false,
+                path: [],
+                from: '',
+                to: ''
             }
+        },
+        methods: {
+            async findPath() {
+                if (this.from && this.to) {
+                    try {
+                        this.showLoader = true;
+                        this.showPaths = true;
+                        const path = await api.search.findPath(this.from, this.to);
+                        this.showLoader = false;
+                        if (path.length) {
+                            this.path = path;
+                            if (!pathRenderer) {
+                                pathRenderer = new PathRenderer(path);
+                            } else {
+                                pathRenderer.setPath(path);
+                            }
+                            return pathRenderer.renderPath();
+                        } else {
+                            pathRenderer.hide();
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            }
+        },
+        created() {
+            pathRenderer = new PathRenderer();
+            pathRenderer.appendTo(this.getScene());
         }
     }
 </script>

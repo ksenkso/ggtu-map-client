@@ -8,7 +8,7 @@
 <script>
     import {Scene} from 'ggtu-map';
     import 'ggtu-map/dist/main.css';
-    import SupportContainer from "@/components/SupportContainer";
+    import SupportContainer from "@/components/MapPanel";
     let scene;
     export default {
         name: 'home',

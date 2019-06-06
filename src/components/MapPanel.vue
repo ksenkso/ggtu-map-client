@@ -1,26 +1,18 @@
 <template>
-    <div class="support">
-        <div class="map__panel">
-            <transition name="component-shift" mode="out-in">
-                <component @toggle="togglePanels" @search-done="locateFirstSearchResult" :is="currentPanel"></component>
-            </transition>
-        </div>
-        <FloorsSwitch
-                v-if="currentBuilding.id"
-                :building-id="currentBuilding.id"
-                @location-selected="onLocationChanged"
-        />
+    <div class="map__panel">
+        <transition name="component-shift" mode="out-in">
+            <component @toggle="togglePanels" @search-done="locateFirstSearchResult" :is="currentPanel"></component>
+        </transition>
     </div>
 </template>
 
 <script>
-    import FloorsSwitch from "@/components/FloorsSwitch";
     import SearchBox from "@/components/SearchBox";
     import Pathfinder from '@/components/Pathfinder';
 
     export default {
-        name: "SupportContainer",
-        components: {FloorsSwitch, SearchBox, Pathfinder},
+        name: "MapPanel",
+        components: {SearchBox, Pathfinder},
         inject: ['getScene'],
         data() {
             return {
@@ -64,7 +56,8 @@
     }
 </script>
 
-<style scoped lang="sass">
+<style lang="sass">
+
 .map__panel
     position: absolute
     z-index: 1000
@@ -77,6 +70,22 @@
     width: 325px
     .button
         cursor: pointer
+        max-width: 140px
+        display: inline-block
+        border: none
+        border-radius: 3px
+        font-size: 16px
+        background-color: #fff
+        padding: 6px 12px
+        transition: box-shadow .1s ease-in-out
+        &:hover
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .13)
+        &:active
+            box-shadow: 0 2px 7px 0 rgba(0, 0, 0, .18)
+        &_block
+            max-width: 100%
+            display: block
+            width: 100%
 .component-shift-enter-active, .component-shift-leave-active
     transition: opacity .1s ease
 
