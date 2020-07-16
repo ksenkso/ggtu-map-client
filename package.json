@@ -11,7 +11,7 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.13",
     "ggtu-map": "1.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "register-service-worker": "^1.5.2",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1"
